@@ -2,7 +2,9 @@ import React from 'react'
 import Link from 'next/link'
 import Layout from '../../../components/layout'
 import StoryblokService from '../../../utils/storyblok-service'
-
+import { FaCalendar } from 'react-icons/fa'
+import { FaTag } from 'react-icons/fa'
+import { FaUser } from 'react-icons/fa'
 export default class extends React.Component {
 
   static async getInitialProps({ query }) {
@@ -10,7 +12,8 @@ export default class extends React.Component {
 
     let [blogPosts, settings] = await Promise.all([
       StoryblokService.get('cdn/stories', {
-        starts_with: `${query.language}/blog`
+        starts_with: `${query.language}/blog`,
+        resolve_relations: 'authors,categories'
       }),
       StoryblokService.get(`cdn/stories/${query.language}/settings`)
     ])
@@ -29,6 +32,7 @@ export default class extends React.Component {
       <Layout settings={settingsContent}>
         {blogPosts.data.stories.map((blogPost, index) => {
             const { published_at, content: { name, intro, authors, categories }} = blogPost
+            
             return (
               <div key={index} className="blog__overview">
                   <h2>
@@ -38,21 +42,15 @@ export default class extends React.Component {
                       </a>
                     </Link>
                   </h2>
-                  <small>
-                    {published_at}
-                  </small>
-                  {authors && (
-                        <ul>
-                          Posted by
-                          {authors.map((author, index) => <li key={index}>{author.name}</li>)}
-                        </ul>
-                      )}
-                      {categories && (
-                        <ul>
-                          Posted in
-                          {categories.map((category, index) => <li key={index}>{category.name}</li>)}
-                        </ul>
-                      )}
+                  <div>
+                    <span><FaCalendar size={18} /> {new Intl.DateTimeFormat("en-GB", {month: "long",day: "2-digit"}).format(new Date(published_at))} </span>
+                    {authors && (
+                      <span><FaUser size={18} /> {authors.map(function(elem){return elem.name;}).join(", ")} </span>
+                    )} 
+                    {categories && (
+                      <span><FaTag size={18} /> {categories.map(function(elem){return elem.name;}).join(", ")} </span>
+                    )}
+                  </div>
                   <p>
                     {intro}
                   </p>

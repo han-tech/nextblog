@@ -42,10 +42,6 @@ class StoryblokService {
       window.storyblok.on('input', (event) => {
         if (event.story.content._uid === reactComponent.state.pageContent._uid) {
           reactComponent.setState({pageContent: window.storyblok.addComments(event.story.content, event.story.id)})
-          window.storyblok.resolveRelations(event.story, ['blogpost.authors', 'blogpost.categories'], () => {
-            // data.story.content has now the resolved relations
-            //this.content = data.story.content
-          })
         }
       })
     }

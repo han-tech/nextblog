@@ -3,12 +3,16 @@ import Layout from '../../../components/layout'
 import StoryblokService from '../../../utils/storyblok-service'
 import SbEditable from 'storyblok-react'
 import marked from 'marked'
-
+import { FaCalendar } from 'react-icons/fa'
+import { FaTag } from 'react-icons/fa'
+import { FaUser } from 'react-icons/fa'
 export default class extends React.Component {
   constructor(props) {
     super(props)
+    
     this.state = {
       pageContent: props.page.data.story.content,
+      published_at:props.page.data.story.published_at
     }
   }
 
@@ -16,18 +20,12 @@ export default class extends React.Component {
     StoryblokService.setQuery(query)
 
     let [page, settings] = await Promise.all([
-      StoryblokService.get(`cdn/stories${asPath}`),
+      StoryblokService.get(`cdn/stories${asPath}`, { resolve_relations: 'authors,categories' }),
       StoryblokService.get(`cdn/stories/${query.language}/settings`)
-    ])
-    let [authors, categories] = await Promise.all([
-      StoryblokService.get(`cdn/stories/?by_uuids=${page.data.story.content.authors.join()}`),
-      StoryblokService.get(`cdn/stories/?by_uuids=${page.data.story.content.categories.join()}`)
     ])
     return {
       page,
-      settings,
-      authors,
-      categories
+      settings
     }
   }
 
@@ -42,25 +40,22 @@ export default class extends React.Component {
 
   render() {
     const settingsContent = this.props.settings.data.story
-    const { pageContent } = this.state
+    const { pageContent, published_at } = this.state
 
     return (
       <Layout settings={settingsContent}>
         <SbEditable content={pageContent}>
           <div className="blog">
             <h1>{pageContent.name}</h1>
-            {pageContent.authors && (
-              <ul>
-                Posted by
-                {pageContent.authors.map((author, index) => <li key={index}>{author.name}</li>)}
-              </ul>
-            )}
-            {pageContent.categories && (
-              <ul>
-                Posted in
-                {pageContent.categories.map((category, index) => <li key={index}>{category.name}</li>)}
-              </ul>
-            )}
+            <div  className="row">
+                <span><FaCalendar size={18} /> {new Intl.DateTimeFormat("en-GB", {month: "long", day: "2-digit"}).format(new Date(published_at))} </span>
+                {pageContent.authors && (
+                  <span><FaUser size={18} /> {pageContent.authors.map(function(elem){return elem.name;}).join(", ")} </span>
+                )} 
+                {pageContent.categories && (
+                  <span><FaTag size={18} /> {pageContent.categories.map(function(elem){return elem.name;}).join(", ")} </span>
+                )}
+            </div>
             <div dangerouslySetInnerHTML={this.body()} className="blog__body"></div>
           </div>
         </SbEditable>
