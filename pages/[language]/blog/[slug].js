@@ -47,7 +47,7 @@ export default class extends React.Component {
         <SbEditable content={pageContent}>
           <div className="blog">
             <h1>{pageContent.name}</h1>
-            <div  className="row">
+            <div className="info">
                 <span><FaCalendar size={18} /> {new Intl.DateTimeFormat("en-GB", {month: "long", day: "2-digit"}).format(new Date(published_at))} </span>
                 {pageContent.authors && (
                   <span><FaUser size={18} /> {pageContent.authors.map(function(elem){return elem.name;}).join(", ")} </span>
@@ -55,6 +55,12 @@ export default class extends React.Component {
                 {pageContent.categories && (
                   <span><FaTag size={18} /> {pageContent.categories.map(function(elem){return elem.name;}).join(", ")} </span>
                 )}
+            </div>
+            <div className="intro">
+              {pageContent.intro}
+            </div>
+            <div className="image">
+              <img src={pageContent.image} />
             </div>
             <div dangerouslySetInnerHTML={this.body()} className="blog__body"></div>
           </div>
@@ -65,7 +71,15 @@ export default class extends React.Component {
             max-width: 600px;
             margin: 40px auto 100px;
           }
-
+          .intro {
+            padding: 10px 0;
+          }
+          .info {
+            padding: 10px 0;
+          }
+          .image {
+            padding: 10px 0;
+          }
           .blog :global(img) {
             width: 100%;
             height: auto;
