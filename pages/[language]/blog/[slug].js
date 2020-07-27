@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import Layout from '../../../components/layout'
 import StoryblokService from '../../../utils/storyblok-service'
 import SbEditable from 'storyblok-react'
@@ -20,7 +21,7 @@ export default class extends React.Component {
     StoryblokService.setQuery(query)
 
     let [page, settings] = await Promise.all([
-      StoryblokService.get(`cdn/stories${asPath}`, { resolve_relations: 'authors,categories' }),
+      StoryblokService.get(`cdn/stories${asPath}`, { resolve_relations: 'author,category,related_posts' }),
       StoryblokService.get(`cdn/stories/${query.language}/settings`)
     ])
     return {
@@ -49,11 +50,11 @@ export default class extends React.Component {
             <h1>{pageContent.name}</h1>
             <div className="info">
                 <span><FaCalendar size={18} /> {new Intl.DateTimeFormat("en-GB", {month: "long", day: "2-digit"}).format(new Date(published_at))} </span>
-                {pageContent.authors && (
-                  <span><FaUser size={18} /> {pageContent.authors.map(function(elem){return elem.name;}).join(", ")} </span>
+                {pageContent.author && (
+                  <span><FaUser size={18} /> <a href={`/authors/${pageContent.author.slug}`}>{pageContent.author.name}</a> </span>
                 )} 
-                {pageContent.categories && (
-                  <span><FaTag size={18} /> {pageContent.categories.map(function(elem){return elem.name;}).join(", ")} </span>
+                {pageContent.category && (
+                  <span><FaTag size={18} /> <a href={`/categories/${pageContent.category.slug}`}>{pageContent.category.name}</a> </span>
                 )}
             </div>
             <div className="intro">
@@ -63,6 +64,22 @@ export default class extends React.Component {
               <img src={pageContent.image} />
             </div>
             <div dangerouslySetInnerHTML={this.body()} className="blog__body"></div>
+            <div className="related_posts">
+              <h2>Related Posts</h2>
+              {pageContent.related_posts && pageContent.related_posts.map((post) => {
+                return (
+                  <Link href={'/' + post.full_slug}>
+                    <a className="blog__detail-link">
+                      <div className="title">
+                        <h3>
+                          {post.name}
+                        </h3>
+                      </div>
+                    </a>
+                  </Link>                    
+                )}
+              )} 
+            </div>
           </div>
         </SbEditable>
         <style jsx>{`

@@ -4,7 +4,7 @@ const Nav = ({settings}) => (
   <header className="top-header util__flex util__container">
     <nav className="top-header__col">
       <ul className="top-header__nav">
-        {settings && settings.content.main_navi.map((navitem, index) =>
+        {settings && settings.content && settings.content.main_navi.map((navitem, index) =>
           <li key={index}>
             <Link href={navitem.link.cached_url}>
               <a className="top-header__link">{navitem.name}</a>
