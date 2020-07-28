@@ -15,7 +15,7 @@ export default class extends React.Component {
       }),
       StoryblokService.get(`cdn/stories/${query.language}/settings`)
     ])
-    const categories = blogPosts.reduce((catsSoFar, { content, full_slug }) => {
+    const categories = blogPosts.data.stories.reduce((catsSoFar, { content, full_slug }) => {
         if (!catsSoFar[content.category.name]) 
             catsSoFar[content.category.name] = [];
         catsSoFar[content.category.name].push({name: content.name, full_slug: full_slug, intro: content.intro});

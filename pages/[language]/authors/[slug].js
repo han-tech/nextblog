@@ -73,7 +73,7 @@ export default class extends React.Component {
           <h2>{pageContent.name}'s posts</h2>
         </div>
         {blogPosts.data.stories.map((blogPost, index) => {
-            const { published_at, content: { name, intro, image, author, category }} = blogPost
+            const { published_at, tag_list, content: { name, intro, image, author, category }} = blogPost
             
             return (
               <div key={index} className="blog__overview">
@@ -100,6 +100,18 @@ export default class extends React.Component {
                     {category && (
                       <span><FaTag size={18} /> <a href={`/${language}/categories/${category.slug}`}>{category.name}</a>  </span>
                     )}
+                    {tag_list && (<span><FaTag size={18} /> 
+                      {tag_list.map((tag) => {
+                        return (
+                          <span>
+                            <Link href={`/${language}/tags/` + tag}>
+                              <a className="blog__detail-link"> {tag} </a>
+                            </Link>                    
+                          </span>
+                        )}
+                    )}
+                    </span>
+                  )} 
                   </div>
               </div>
               )

@@ -6,6 +6,7 @@ import marked from 'marked'
 import Link from 'next/link'
 import { FaCalendar } from 'react-icons/fa'
 import { FaTag } from 'react-icons/fa'
+import { FaList } from 'react-icons/fa'
 import { FaUser } from 'react-icons/fa'
 
 export default class extends React.Component {
@@ -43,11 +44,6 @@ export default class extends React.Component {
     StoryblokService.initEditor(this)
   }
 
-  body() {
-    let rawMarkup = marked(this.state.pageContent.body)
-    return { __html:  rawMarkup}
-  }
-
   render() {
     const { pageContent, language} = this.state
     const { blogPosts } = this.props
@@ -64,7 +60,7 @@ export default class extends React.Component {
           <h2>Posts</h2>
         </div>
         {blogPosts.data.stories.map((blogPost, index) => {
-            const { published_at, content: { name, intro, image, author, category }} = blogPost
+            const { published_at, tag_list, content: { name, intro, image, author, category }} = blogPost
             
             return (
               <div key={index} className="blog__overview">
@@ -89,8 +85,19 @@ export default class extends React.Component {
                       <span><FaUser size={18} /> <a href={`/${language}/authors/${author.slug}`}>{author.name}</a> </span>
                     )} 
                     {category && (
-                      <span><FaTag size={18} /> <a href={`/${language}/categories/${category.slug}`}>{category.name}</a> </span>
+                      <span><FaList size={18} /> <a href={`/${language}/categories/${category.slug}`}>{category.name}</a> </span>
                     )}
+                    {tag_list && (<span><FaTag size={18} /> 
+                      {tag_list.map((tag) => {
+                        return (
+                          <span>
+                            <Link href={`/${language}/tags/` + tag}>
+                              <a className="blog__detail-link"> {tag} </a>
+                            </Link>                    
+                          </span>
+                        )}
+                    )}</span>
+                  )} 
                   </div>
               </div>
               )
@@ -145,10 +152,6 @@ export default class extends React.Component {
           .blog :global(img) {
             width: 100%;
             height: auto;
-          }
-
-          .blog__body {
-            line-height: 1.6;
           }
         `}</style>
       </Layout>

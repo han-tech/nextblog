@@ -5,6 +5,7 @@ import StoryblokService from '../../../utils/storyblok-service'
 import SbEditable from 'storyblok-react'
 import marked from 'marked'
 import { FaCalendar } from 'react-icons/fa'
+import { FaList } from 'react-icons/fa'
 import { FaTag } from 'react-icons/fa'
 import { FaUser } from 'react-icons/fa'
 export default class extends React.Component {
@@ -14,6 +15,7 @@ export default class extends React.Component {
     this.state = {
       pageContent: props.page.data.story.content,
       published_at:props.page.data.story.published_at,
+      tag_list:props.page.data.story.tag_list,
       language:props.language
     }
   }
@@ -44,7 +46,7 @@ export default class extends React.Component {
 
   render() {
     const settingsContent = this.props.settings.data.story
-    const { pageContent, published_at, language } = this.state
+    const { pageContent, published_at, language, tag_list } = this.state
 
     return (
       <Layout settings={settingsContent}>
@@ -57,8 +59,20 @@ export default class extends React.Component {
                   <span><FaUser size={18} /> <a href={`/${language}/authors/${pageContent.author.slug}`}>{pageContent.author.name}</a> </span>
                 )} 
                 {pageContent.category && (
-                  <span><FaTag size={18} /> <a href={`/${language}/categories/${pageContent.category.slug}`}>{pageContent.category.name}</a> </span>
+                  <span><FaList size={18} /> <a href={`/${language}/categories/${pageContent.category.slug}`}>{pageContent.category.name}</a> </span>
                 )}
+                {tag_list && (<span><FaTag size={18} /> 
+                  {tag_list.map((tag) => {
+                    return (
+                      <span>
+                        <Link href={`/${language}/tags/` + tag}>
+                          <a className="blog__detail-link"> {tag} </a>
+                        </Link>                    
+                      </span>
+                    )}
+                )}
+                </span>
+              )} 
             </div>
             <div className="intro">
               {pageContent.intro}

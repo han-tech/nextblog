@@ -4,6 +4,7 @@ import Layout from '../../../components/layout'
 import StoryblokService from '../../../utils/storyblok-service'
 import { FaCalendar } from 'react-icons/fa'
 import { FaTag } from 'react-icons/fa'
+import { FaList } from 'react-icons/fa'
 import { FaUser } from 'react-icons/fa'
 export default class extends React.Component {
 
@@ -33,7 +34,7 @@ export default class extends React.Component {
     return (
       <Layout settings={settingsContent}>
         {blogPosts.data.stories.map((blogPost, index) => {
-            const { published_at, content: { name, intro, image, author, category }} = blogPost
+            const { published_at, tag_list, content: { name, intro, image, author, category }} = blogPost
             
             return (
               <div key={index} className="blog__overview">
@@ -58,8 +59,19 @@ export default class extends React.Component {
                       <span><FaUser size={18} /> <a href={`/${language}/authors/${author.slug}`}>{author.name}</a> </span>
                     )} 
                     {category && (
-                      <span><FaTag size={18} /> <a href={`/${language}/categories/${category.slug}`}>{category.name}</a> </span>
+                      <span><FaList size={18} /> <a href={`/${language}/categories/${category.slug}`}>{category.name}</a> </span>
                     )}
+                    {tag_list && (<span><FaTag size={18} /> 
+                      {tag_list.map((tag) => {
+                        return (
+                          <span>
+                            <Link href={`/${language}/tags/` + tag}>
+                              <a className="blog__detail-link"> {tag} </a>
+                            </Link>                    
+                          </span>
+                        )}
+                    )}</span>
+                  )} 
                   </div>
               </div>
               )

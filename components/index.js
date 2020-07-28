@@ -3,12 +3,16 @@ import Feature from './Feature'
 import Grid from './Grid'
 import Placeholder from './Placeholder'
 import Slide from './Slide'
+import Field from './Field'
+import Form from './Form'
 
 const Components = {
   'teaser': Teaser,
   'feature': Feature,
   'grid': Grid,
-  'slide': Slide
+  'slide': Slide,
+  'field': Field,
+  'form': Form
 }
 
 const Component = ({blok}) => {
