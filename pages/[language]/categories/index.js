@@ -1,24 +1,20 @@
 import React from 'react'
 import Link from 'next/link'
-import Layout from '../../components/layout'
-import StoryblokService from '../../utils/storyblok-service'
+import Layout from '../../../components/layout'
+import StoryblokService from '../../../utils/storyblok-service'
 
 export default class extends React.Component {
 
   static async getInitialProps({ query }) {
     StoryblokService.setQuery(query)
 
-    let [englishBlogPosts,germanBlogPosts] = await Promise.all([StoryblokService.get('cdn/stories', {
+    let [blogPosts,settings] = await Promise.all([StoryblokService.get('cdn/stories', {
         version: 'draft', 
-        starts_with: `en/blog`,
+        starts_with: `${query.language}/blog`,
         resolve_relations: 'author,category'
       }),
-      StoryblokService.get('cdn/stories', {
-        version: 'draft', 
-        starts_with: `de/blog`,
-        resolve_relations: 'author,category'
-      })])
-    var blogPosts = [].concat(englishBlogPosts.data.stories,germanBlogPosts.data.stories);
+      StoryblokService.get(`cdn/stories/${query.language}/settings`)
+    ])
     const categories = blogPosts.reduce((catsSoFar, { content, full_slug }) => {
         if (!catsSoFar[content.category.name]) 
             catsSoFar[content.category.name] = [];
@@ -26,15 +22,17 @@ export default class extends React.Component {
         return catsSoFar;
       }, {});
     return {
-      categories
+      categories,
+      settings
     }
   }
 
   render() {
     const { categories } = this.props
+    const settingsContent = this.props.settings.data.story
 
     return (
-      <Layout>
+      <Layout settings={settingsContent}>
         <div>
             <h2>All Posts</h2>
         </div>

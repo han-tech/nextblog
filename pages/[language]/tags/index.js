@@ -1,66 +1,58 @@
 import React from 'react'
-import Link from 'next/link'
 import Layout from '../../../components/layout'
 import StoryblokService from '../../../utils/storyblok-service'
+import SbEditable from 'storyblok-react'
+import marked from 'marked'
+import Link from 'next/link'
 import { FaCalendar } from 'react-icons/fa'
 import { FaTag } from 'react-icons/fa'
 import { FaUser } from 'react-icons/fa'
-export default class extends React.Component {
 
+export default class extends React.Component {  
   static async getInitialProps({ query }) {
     StoryblokService.setQuery(query)
 
-    let [blogPosts, settings, language] = await Promise.all([
-      StoryblokService.get('cdn/stories', {
-        starts_with: `${query.language}/blog`,
-        resolve_relations: 'author,category'
+    let [tags, settings, language] = await Promise.all([
+      StoryblokService.get(`cdn/tags`, {
+        starts_with: `${query.language}/blog`
       }),
       StoryblokService.get(`cdn/stories/${query.language}/settings`),
       query.language
     ])
-
     return {
-      blogPosts,
-      settings, 
+      tags,
+      settings,
       language
     }
   }
 
+  componentDidMount() {
+    StoryblokService.initEditor(this)
+  }
+
   render() {
     const settingsContent = this.props.settings.data.story
-    const { blogPosts, language } = this.props
+    const { tags, language } = this.props
 
     return (
       <Layout settings={settingsContent}>
-        {blogPosts.data.stories.map((blogPost, index) => {
-            const { published_at, content: { name, intro, image, author, category }} = blogPost
+        <div  className="posts">
+          <h2>Tags</h2>
+        </div>
+        {tags.data.tags && tags.data.tags.map((tag, index) => {
+            const { name, taggings_count } = tag
             
             return (
               <div key={index} className="blog__overview">
-                <Link href={'/' + blogPost.full_slug}>
+                <Link href={`/${language}/tags/` + name}>
                   <a className="blog__detail-link">
-                    <div className="image">
-                      <img src={image} />
-                    </div>
                     <div className="title">
                       <h2>
-                        {name}
+                        {name} ({taggings_count})
                       </h2>
-                    </div>
-                    <div className="intro">
-                      {intro}
                     </div>
                   </a>
                 </Link>
-                <div className="info">
-                    <span><FaCalendar size={18} /> {new Intl.DateTimeFormat("en-GB", {month: "long",day: "2-digit"}).format(new Date(published_at))} </span>
-                    {author && (
-                      <span><FaUser size={18} /> <a href={`/${language}/authors/${author.slug}`}>{author.name}</a> </span>
-                    )} 
-                    {category && (
-                      <span><FaTag size={18} /> <a href={`/${language}/categories/${category.slug}`}>{category.name}</a> </span>
-                    )}
-                  </div>
               </div>
               )
             }
@@ -83,7 +75,12 @@ export default class extends React.Component {
           .blog__detail-link {
             color: #000;
           }
-          .info {
+          .posts {
+            padding: 0 10px;
+            max-width: 600px;
+            margin: 10px auto 10px;
+          }
+          .count {
             padding: 10px 0;
           }
           .title {
@@ -91,6 +88,28 @@ export default class extends React.Component {
           }
           .image {
             padding: 10px 0;
+          }
+          .blog {
+            padding: 0 20px;
+            max-width: 600px;
+            margin: 40px auto 100px;
+          }
+          .bio {
+            padding: 10px 0;
+          }
+          .title {
+            padding: 10px 0;
+          }
+          .image {
+            padding: 10px 0;
+          }
+          .blog :global(img) {
+            width: 100%;
+            height: auto;
+          }
+
+          .blog__body {
+            line-height: 1.6;
           }
         `}</style>
       </Layout>

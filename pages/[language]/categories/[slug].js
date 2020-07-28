@@ -1,37 +1,68 @@
 import React from 'react'
-import Link from 'next/link'
 import Layout from '../../../components/layout'
 import StoryblokService from '../../../utils/storyblok-service'
+import SbEditable from 'storyblok-react'
+import marked from 'marked'
+import Link from 'next/link'
 import { FaCalendar } from 'react-icons/fa'
 import { FaTag } from 'react-icons/fa'
 import { FaUser } from 'react-icons/fa'
-export default class extends React.Component {
 
-  static async getInitialProps({ query }) {
+export default class extends React.Component {
+  constructor(props) {
+    super(props)
+    
+    this.state = {
+      pageContent: props.page.data.story.content,
+      language:props.language
+    }
+  }
+
+  static async getInitialProps({ asPath, query }) {
     StoryblokService.setQuery(query)
 
-    let [blogPosts, settings, language] = await Promise.all([
-      StoryblokService.get('cdn/stories', {
+    let page = await StoryblokService.get(`cdn/stories${asPath}`);
+    let [blogPosts,settings,language] = await Promise.all([StoryblokService.get('cdn/stories', {
+        version: 'draft', 
+        resolve_relations: 'author,category',
         starts_with: `${query.language}/blog`,
-        resolve_relations: 'author,category'
+        'filter_query[category][in]': page.data.story.uuid 
       }),
       StoryblokService.get(`cdn/stories/${query.language}/settings`),
       query.language
     ])
-
     return {
+      page,
       blogPosts,
-      settings, 
+      settings,
       language
     }
   }
 
+  componentDidMount() {
+    StoryblokService.initEditor(this)
+  }
+
+  body() {
+    let rawMarkup = marked(this.state.pageContent.body)
+    return { __html:  rawMarkup}
+  }
+
   render() {
+    const { pageContent, language} = this.state
+    const { blogPosts } = this.props
     const settingsContent = this.props.settings.data.story
-    const { blogPosts, language } = this.props
 
     return (
       <Layout settings={settingsContent}>
+        <SbEditable content={pageContent}>
+          <div className="blog">
+            <h1>{pageContent.name}</h1>
+          </div>
+        </SbEditable>
+        <div  className="posts">
+          <h2>Posts</h2>
+        </div>
         {blogPosts.data.stories.map((blogPost, index) => {
             const { published_at, content: { name, intro, image, author, category }} = blogPost
             
@@ -83,6 +114,11 @@ export default class extends React.Component {
           .blog__detail-link {
             color: #000;
           }
+          .posts {
+            padding: 0 10px;
+            max-width: 600px;
+            margin: 10px auto 10px;
+          }
           .info {
             padding: 10px 0;
           }
@@ -91,6 +127,28 @@ export default class extends React.Component {
           }
           .image {
             padding: 10px 0;
+          }
+          .blog {
+            padding: 0 20px;
+            max-width: 600px;
+            margin: 40px auto 100px;
+          }
+          .bio {
+            padding: 10px 0;
+          }
+          .title {
+            padding: 10px 0;
+          }
+          .image {
+            padding: 10px 0;
+          }
+          .blog :global(img) {
+            width: 100%;
+            height: auto;
+          }
+
+          .blog__body {
+            line-height: 1.6;
           }
         `}</style>
       </Layout>

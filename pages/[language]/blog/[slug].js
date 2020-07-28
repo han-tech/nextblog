@@ -13,20 +13,23 @@ export default class extends React.Component {
     
     this.state = {
       pageContent: props.page.data.story.content,
-      published_at:props.page.data.story.published_at
+      published_at:props.page.data.story.published_at,
+      language:props.language
     }
   }
 
   static async getInitialProps({ asPath, query }) {
     StoryblokService.setQuery(query)
 
-    let [page, settings] = await Promise.all([
+    let [page, settings, language] = await Promise.all([
       StoryblokService.get(`cdn/stories${asPath}`, { resolve_relations: 'author,category,related_posts' }),
-      StoryblokService.get(`cdn/stories/${query.language}/settings`)
+      StoryblokService.get(`cdn/stories/${query.language}/settings`),
+      query.language
     ])
     return {
       page,
-      settings
+      settings,
+      language
     }
   }
 
@@ -41,7 +44,7 @@ export default class extends React.Component {
 
   render() {
     const settingsContent = this.props.settings.data.story
-    const { pageContent, published_at } = this.state
+    const { pageContent, published_at, language } = this.state
 
     return (
       <Layout settings={settingsContent}>
@@ -51,10 +54,10 @@ export default class extends React.Component {
             <div className="info">
                 <span><FaCalendar size={18} /> {new Intl.DateTimeFormat("en-GB", {month: "long", day: "2-digit"}).format(new Date(published_at))} </span>
                 {pageContent.author && (
-                  <span><FaUser size={18} /> <a href={`/authors/${pageContent.author.slug}`}>{pageContent.author.name}</a> </span>
+                  <span><FaUser size={18} /> <a href={`/${language}/authors/${pageContent.author.slug}`}>{pageContent.author.name}</a> </span>
                 )} 
                 {pageContent.category && (
-                  <span><FaTag size={18} /> <a href={`/categories/${pageContent.category.slug}`}>{pageContent.category.name}</a> </span>
+                  <span><FaTag size={18} /> <a href={`/${language}/categories/${pageContent.category.slug}`}>{pageContent.category.name}</a> </span>
                 )}
             </div>
             <div className="intro">

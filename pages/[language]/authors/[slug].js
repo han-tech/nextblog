@@ -1,6 +1,6 @@
 import React from 'react'
-import Layout from '../../components/layout'
-import StoryblokService from '../../utils/storyblok-service'
+import Layout from '../../../components/layout'
+import StoryblokService from '../../../utils/storyblok-service'
 import SbEditable from 'storyblok-react'
 import marked from 'marked'
 import Link from 'next/link'
@@ -13,7 +13,8 @@ export default class extends React.Component {
     super(props)
     
     this.state = {
-      pageContent: props.page.data.story.content
+      pageContent: props.page.data.story.content,
+      language:props.language
     }
   }
 
@@ -21,22 +22,20 @@ export default class extends React.Component {
     StoryblokService.setQuery(query)
 
     let page = await StoryblokService.get(`cdn/stories${asPath}`);
-    let [englishBlogPosts,germanBlogPosts] = await Promise.all([StoryblokService.get('cdn/stories', {
+    let [blogPosts, settings, language] = await Promise.all([StoryblokService.get('cdn/stories', {
         version: 'draft', 
         resolve_relations: 'author,category',
-        starts_with: `en/blog`,
-        'filter_query[category][in]': page.data.story.uuid 
+        starts_with: `${query.language}/blog`,
+        'filter_query[author][in]': page.data.story.uuid 
       }),
-      StoryblokService.get('cdn/stories', {
-        version: 'draft', 
-        resolve_relations: 'author,category',
-        starts_with: `de/blog`,
-        'filter_query[category][in]': page.data.story.uuid 
-      })])
-    var blogPosts = [].concat(englishBlogPosts.data.stories,germanBlogPosts.data.stories);
+      StoryblokService.get(`cdn/stories/${query.language}/settings`),
+      query.language
+    ])
     return {
       page,
-      blogPosts
+      blogPosts,
+      settings,
+      language
     }
   }
 
@@ -50,20 +49,30 @@ export default class extends React.Component {
   }
 
   render() {
-    const { pageContent} = this.state
+    const { pageContent, language} = this.state
     const { blogPosts } = this.props
+    const settingsContent = this.props.settings.data.story
 
     return (
-      <Layout>
+      <Layout settings={settingsContent}>
         <SbEditable content={pageContent}>
           <div className="blog">
             <h1>{pageContent.name}</h1>
+            <div className="title">
+              {pageContent.title}
+            </div>
+            <div className="image">
+              <img src={pageContent.avatar} />
+            </div>
+            <div className="bio">
+              {pageContent.bio}
+            </div>
           </div>
         </SbEditable>
         <div  className="posts">
-          <h2>Posts</h2>
+          <h2>{pageContent.name}'s posts</h2>
         </div>
-        {blogPosts.map((blogPost, index) => {
+        {blogPosts.data.stories.map((blogPost, index) => {
             const { published_at, content: { name, intro, image, author, category }} = blogPost
             
             return (
@@ -86,10 +95,10 @@ export default class extends React.Component {
                 <div className="info">
                     <span><FaCalendar size={18} /> {new Intl.DateTimeFormat("en-GB", {month: "long",day: "2-digit"}).format(new Date(published_at))} </span>
                     {author && (
-                      <span><FaUser size={18} /> <a href={`/authors/${author.slug}`}>{author.name}</a> </span>
+                      <span><FaUser size={18} /> <a href={`/${language}/authors/${author.slug}`}>{author.name}</a> </span>
                     )} 
                     {category && (
-                      <span><FaTag size={18} /> <a href={`/categories/${category.slug}`}>{category.name}</a> </span>
+                      <span><FaTag size={18} /> <a href={`/${language}/categories/${category.slug}`}>{category.name}</a>  </span>
                     )}
                   </div>
               </div>
