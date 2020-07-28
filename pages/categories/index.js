@@ -22,7 +22,7 @@ export default class extends React.Component {
     const categories = blogPosts.reduce((catsSoFar, { content, full_slug }) => {
         if (!catsSoFar[content.category.name]) 
             catsSoFar[content.category.name] = [];
-        catsSoFar[content.category.name].push({name: content.name, full_slug: full_slug});
+        catsSoFar[content.category.name].push({name: content.name, full_slug: full_slug, intro: content.intro});
         return catsSoFar;
       }, {});
     return {
@@ -49,9 +49,12 @@ export default class extends React.Component {
                             <Link href={'/' + post.full_slug}>
                             <a className="blog__detail-link">
                                 <div className="title">
-                                <span>
-                                    {post.name}
-                                </span>
+                                    <h3>
+                                        {post.name}
+                                    </h3>
+                                </div>
+                                <div className="intro">
+                                    {post.intro}
                                 </div>
                             </a>
                             </Link>
@@ -78,6 +81,9 @@ export default class extends React.Component {
 
           .blog__detail-link {
             color: #000;
+          }
+          .info {
+            padding: 10px 0;
           }
           .title {
             padding: 10px 0;
