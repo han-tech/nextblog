@@ -36,10 +36,10 @@ export default class extends React.Component {
         <div>
             <h2>All Posts</h2>
         </div>
-        {categories && Object.keys(categories).map(category => {
+        {categories && Object.keys(categories).map((category, index) => {
             var posts = categories[category];
             return (
-                <div>
+                <div key={index}>
                     <h3>{category}</h3>
                     {posts && posts.map((post, index)=>{
                         return (

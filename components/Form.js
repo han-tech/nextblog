@@ -21,8 +21,8 @@ export default class Form extends React.Component {
                 method="POST"
             >
                 <div className="util__flex-col">
-                    {blok.fields.map((field) =>
-                        <div>
+                    {blok.fields.map((field, index) =>
+                        <div key={index}>
                             <label>{field.name}:</label>
                             <input type={field.type} name={field.name} />
                         </div>
