@@ -37,18 +37,19 @@ export default class extends React.Component {
       <SbEditable content={blok}>
         <Box>
           <Component blok={this.slide()} />
-          <Box className="teaser__pag">
+          <div className="teaser__pag">
             {blok.body.map((blok, index) =>
               <button key={index} onClick={() => this.handleDotClick(index)}
                 className={this.pagClass(index)}>Next</button>
             )}
-          </Box>
+          </div>
           <style jsx>{`
             .teaser__pag {
               width: 100%;
               text-align: center;
               margin: 30px 0;
             }
+
             .teaser__pag-dot {
               text-indent: -9999px;
               border: 0;
