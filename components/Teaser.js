@@ -1,7 +1,7 @@
 import React from 'react'
 import Component from './index'
 import SbEditable from 'storyblok-react'
-
+import { Box } from "@chakra-ui/core"
 export default class extends React.Component {
   constructor(props) {
     super(props)
@@ -35,22 +35,20 @@ export default class extends React.Component {
 
     return (
       <SbEditable content={blok}>
-        <div className="teaser">
+        <Box>
           <Component blok={this.slide()} />
-          <div className="teaser__pag">
+          <Box className="teaser__pag">
             {blok.body.map((blok, index) =>
               <button key={index} onClick={() => this.handleDotClick(index)}
                 className={this.pagClass(index)}>Next</button>
             )}
-          </div>
-
+          </Box>
           <style jsx>{`
             .teaser__pag {
               width: 100%;
               text-align: center;
               margin: 30px 0;
             }
-
             .teaser__pag-dot {
               text-indent: -9999px;
               border: 0;
@@ -68,7 +66,7 @@ export default class extends React.Component {
               background-color: #000;
             }
           `}</style>
-        </div>
+        </Box>
       </SbEditable>
     )
   }

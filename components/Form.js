@@ -1,6 +1,6 @@
 import React from 'react';
 import SbEditable from 'storyblok-react'
-
+import { Flex, Box, Text, Input, Button } from "@chakra-ui/core"
 export default class Form extends React.Component {
     constructor(props) {
       super(props);
@@ -20,16 +20,16 @@ export default class Form extends React.Component {
                 action={blok.handler}
                 method="POST"
             >
-                <div className="util__flex-col">
+                <Flex>
                     {blok.fields.map((field, index) =>
-                        <div key={index}>
-                            <label>{field.name}:</label>
-                            <input type={field.type} name={field.name} />
-                        </div>
+                        <Box key={index}>
+                            <Text>{field.name}:</Text>
+                            <Input type={field.type} name={field.name} />
+                        </Box>
                     )}
-                </div>
-                {status === "SUCCESS" ? <p>{blok.successMessage}</p> : <button>Submit</button>}
-                {status === "ERROR" && <p>{blok.errorMessage}</p>}
+                </Flex>
+                {status === "SUCCESS" ? <Text>{blok.successMessage}</Text> : <Button>Submit</Button>}
+                {status === "ERROR" && <Text>{blok.errorMessage}</Text>}
             </form>
         </SbEditable>
       );

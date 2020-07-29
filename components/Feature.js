@@ -1,4 +1,5 @@
 import SbEditable from 'storyblok-react'
+import { Box, Stack, Image, Heading, Text } from "@chakra-ui/core"
 
 const Feature = ({blok}) => {
   const resizedIcon = function(iconImage) {
@@ -10,23 +11,15 @@ const Feature = ({blok}) => {
 
   return (
     <SbEditable content={blok}>
-      <div className="feature util__flex-eq">
-        <img src={resizedIcon(blok.icon)} className="feature__icon" />
-        <h2>{blok.name}</h2>
-        <div className="feature__description">
-          {blok.description}
-        </div>
-        <style jsx>{`
-          .feature {
-            text-align: center;
-            padding: 30px 10px 100px;
-          }
-
-          .feature__icon {
-            max-width: 80px;
-          }
-        `}</style>
-      </div>
+      <Stack align="center" justify="center" >
+        <Box>
+          <Image src={resizedIcon(blok.icon)} width="80px"></Image>
+        </Box>
+        <Box p={5} w="100%" textAlign="center">
+          <Heading fontSize="xl">{blok.name}</Heading>
+          <Text mt={4}>{blok.description}</Text>
+        </Box>
+      </Stack>
     </SbEditable>
   )
 }

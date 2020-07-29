@@ -1,17 +1,12 @@
 import SbEditable from 'storyblok-react'
+import { Box, Image } from "@chakra-ui/core"
 
 const Slide = ({blok}) => {
   return (
     <SbEditable content={blok}>
-      <div className="slide">
-        <img src={blok.image} />
-        <style jsx>{`
-          .slide img {
-            width: 100%;
-            max-height: 500px;
-          }
-        `}</style>
-      </div>
+      <Box>
+        <Image src={blok.image} />
+      </Box>
     </SbEditable>
   )
 }

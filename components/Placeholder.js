@@ -1,5 +1,7 @@
+import { Box } from "@chakra-ui/core"
+
 const Placeholder = ({componentName}) => (
-    <div>The component {componentName} has not been created yet.</div>
+    <Box>The component {componentName} has not been created yet.</Box>
   );
   
   export default Placeholder;
