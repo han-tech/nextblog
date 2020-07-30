@@ -2,12 +2,8 @@ import React from 'react'
 import Layout from '../../../components/layout'
 import StoryblokService from '../../../utils/storyblok-service'
 import SbEditable from 'storyblok-react'
-import marked from 'marked'
-import Link from 'next/link'
-import { FaCalendar } from 'react-icons/fa'
-import { FaTag } from 'react-icons/fa'
-import { FaList } from 'react-icons/fa'
-import { FaUser } from 'react-icons/fa'
+import PostCard from '../../../components/PostCard'
+import { Box, Stack, Heading, Text } from '@chakra-ui/core'
 
 export default class extends React.Component {
   constructor(props) {
@@ -52,108 +48,22 @@ export default class extends React.Component {
     return (
       <Layout settings={settingsContent}>
         <SbEditable content={pageContent}>
-          <div className="blog">
-            <h1>{pageContent.name}</h1>
-          </div>
-        </SbEditable>
-        <div  className="posts">
-          <h2>Posts</h2>
-        </div>
-        {blogPosts.data.stories.map((blogPost, index) => {
-            const { published_at, tag_list, content: { name, intro, image, author, category }} = blogPost
-            
-            return (
-              <div key={index} className="blog__overview">
-                <Link href={'/' + blogPost.full_slug}>
-                  <a className="blog__detail-link">
-                    <div className="image">
-                      <img src={image} />
-                    </div>
-                    <div className="title">
-                      <h2>
-                        {name}
-                      </h2>
-                    </div>
-                    <div className="intro">
-                      {intro}
-                    </div>
-                  </a>
-                </Link>
-                <div className="info">
-                    <span><FaCalendar size={18} /> {new Intl.DateTimeFormat("en-GB", {month: "long",day: "2-digit"}).format(new Date(published_at))} </span>
-                    {author && (
-                      <span><FaUser size={18} /> <a href={`/${language}/authors/${author.slug}`}>{author.name}</a> </span>
-                    )} 
-                    {category && (
-                      <span><FaList size={18} /> <a href={`/${language}/categories/${category.slug}`}>{category.name}</a> </span>
-                    )}
-                    {tag_list && (<span><FaTag size={18} /> 
-                      {tag_list.map((tag) => {
-                        return (
-                          <span>
-                            <Link href={`/${language}/tags/` + tag}>
-                              <a className="blog__detail-link"> {tag} </a>
-                            </Link>                    
-                          </span>
-                        )}
-                    )}</span>
-                  )} 
-                  </div>
-              </div>
-              )
+          <Stack>
+            <Box>
+              <Heading>{pageContent.name}</Heading>
+              <Text>{pageContent.description}</Text>
+            </Box>
+            <Heading>Posts in {pageContent.name}</Heading>
+            {blogPosts.data.stories.map((blogPost, index) => {
+              const { published_at, tag_list, full_slug, content: { name, intro, image, author, category }} = blogPost
+              
+              return (
+                <PostCard key={index} post={{published_at:published_at, image:image, name:name, intro:intro, author:author, category:category, tag_list:tag_list, full_slug:full_slug}} index={index} language={language} />              
+                )
+              })
             }
-          )
-        }
-        <style jsx>{`
-          .blog__overview {
-            padding: 0 20px;
-            max-width: 600px;
-            margin: 40px auto 60px;
-          }
-          .blog__overview :global(img) {
-            width: 100%;
-            height: auto;
-          }
-          .blog__overview p {
-            line-height: 1.6;
-          }
-
-          .blog__detail-link {
-            color: #000;
-          }
-          .posts {
-            padding: 0 10px;
-            max-width: 600px;
-            margin: 10px auto 10px;
-          }
-          .info {
-            padding: 10px 0;
-          }
-          .title {
-            padding: 10px 0;
-          }
-          .image {
-            padding: 10px 0;
-          }
-          .blog {
-            padding: 0 20px;
-            max-width: 600px;
-            margin: 40px auto 100px;
-          }
-          .bio {
-            padding: 10px 0;
-          }
-          .title {
-            padding: 10px 0;
-          }
-          .image {
-            padding: 10px 0;
-          }
-          .blog :global(img) {
-            width: 100%;
-            height: auto;
-          }
-        `}</style>
+          </Stack>
+        </SbEditable>
       </Layout>
     )
   }

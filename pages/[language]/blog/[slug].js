@@ -4,10 +4,9 @@ import Layout from '../../../components/layout'
 import StoryblokService from '../../../utils/storyblok-service'
 import SbEditable from 'storyblok-react'
 import marked from 'marked'
-import { FaCalendar } from 'react-icons/fa'
-import { FaList } from 'react-icons/fa'
-import { FaTag } from 'react-icons/fa'
-import { FaUser } from 'react-icons/fa'
+import { Box, Heading, Stack } from "@chakra-ui/core"
+import PostCard from '../../../components/PostCard'
+
 export default class extends React.Component {
   constructor(props) {
     super(props)
@@ -46,43 +45,16 @@ export default class extends React.Component {
 
   render() {
     const settingsContent = this.props.settings.data.story
-    const { pageContent, published_at, language, tag_list } = this.state
+    const { pageContent, published_at, language, tag_list, full_slug } = this.state
 
     return (
       <Layout settings={settingsContent}>
         <SbEditable content={pageContent}>
-          <div className="blog">
-            <h1>{pageContent.name}</h1>
-            <div className="info">
-                <span><FaCalendar size={18} /> {new Intl.DateTimeFormat("en-GB", {month: "long", day: "2-digit"}).format(new Date(published_at))} </span>
-                {pageContent.author && (
-                  <span><FaUser size={18} /> <a href={`/${language}/authors/${pageContent.author.slug}`}>{pageContent.author.name}</a> </span>
-                )} 
-                {pageContent.category && (
-                  <span><FaList size={18} /> <a href={`/${language}/categories/${pageContent.category.slug}`}>{pageContent.category.name}</a> </span>
-                )}
-                {tag_list && (<span><FaTag size={18} /> 
-                  {tag_list.map((tag) => {
-                    return (
-                      <span>
-                        <Link href={`/${language}/tags/` + tag}>
-                          <a className="blog__detail-link"> {tag} </a>
-                        </Link>                    
-                      </span>
-                    )}
-                )}
-                </span>
-              )} 
-            </div>
-            <div className="intro">
-              {pageContent.intro}
-            </div>
-            <div className="image">
-              <img src={pageContent.image} />
-            </div>
-            <div dangerouslySetInnerHTML={this.body()} className="blog__body"></div>
-            <div className="related_posts">
-              <h2>Related Posts</h2>
+          <Stack>
+            <PostCard post={{published_at:published_at, image:pageContent.image, name:pageContent.name, intro:pageContent.intro, author:pageContent.author, category:pageContent.category, tag_list:tag_list, full_slug:full_slug}} index={0} language={language} />
+            <Box dangerouslySetInnerHTML={this.body()}></Box>
+            <Box className="related_posts">
+              <Heading>Related Posts</Heading>
               {pageContent.related_posts && pageContent.related_posts.map((post) => {
                 return (
                   <Link href={'/' + post.full_slug}>
@@ -96,33 +68,9 @@ export default class extends React.Component {
                   </Link>                    
                 )}
               )} 
-            </div>
-          </div>
+            </Box>
+          </Stack>
         </SbEditable>
-        <style jsx>{`
-          .blog {
-            padding: 0 20px;
-            max-width: 600px;
-            margin: 40px auto 100px;
-          }
-          .intro {
-            padding: 10px 0;
-          }
-          .info {
-            padding: 10px 0;
-          }
-          .image {
-            padding: 10px 0;
-          }
-          .blog :global(img) {
-            width: 100%;
-            height: auto;
-          }
-
-          .blog__body {
-            line-height: 1.6;
-          }
-        `}</style>
       </Layout>
     )
   }

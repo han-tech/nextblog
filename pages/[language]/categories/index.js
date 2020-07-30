@@ -2,6 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import Layout from '../../../components/layout'
 import StoryblokService from '../../../utils/storyblok-service'
+import { Heading, Stack,Box,Text } from '@chakra-ui/core'
 
 export default class extends React.Component {
 
@@ -33,60 +34,36 @@ export default class extends React.Component {
 
     return (
       <Layout settings={settingsContent}>
-        <div>
-            <h2>All Posts</h2>
-        </div>
-        {categories && Object.keys(categories).map((category, index) => {
+        <Stack>
+          <Heading>All Posts group by categories</Heading>
+          {categories && Object.keys(categories).map((category, index) => {
             var posts = categories[category];
             return (
-                <div key={index}>
-                    <h3>{category}</h3>
-                    {posts && posts.map((post, index)=>{
-                        return (
-                        <div key={index} className="blog__overview">
-                            <Link href={'/' + post.full_slug}>
-                            <a className="blog__detail-link">
-                                <div className="title">
-                                    <h3>
-                                        {post.name}
-                                    </h3>
-                                </div>
-                                <div className="intro">
+              <Stack key={index}>
+                  <Heading>{category}</Heading>
+                  {posts && posts.map((post, index)=>{
+                      return (
+                      <Box key={index} m={3}>
+                          <Link href={'/' + post.full_slug}>
+                            <a>
+                              <Box>
+                                  <Heading>
+                                    {post.name}
+                                  </Heading>
+                                  <Text>
                                     {post.intro}
-                                </div>
+                                  </Text>
+                              </Box>                                  
                             </a>
-                            </Link>
-                        </div>
-                        )
-                    })}
-                </div>
+                          </Link>
+                      </Box>
+                      )
+                  })}
+              </Stack>
             )
-        })
-        }
-        <style jsx>{`
-          .blog__overview {
-            padding: 0 10px;
-            max-width: 600px;
-            margin: 10px auto 10px;
+          })
           }
-          .blog__overview :global(img) {
-            width: 100%;
-            height: auto;
-          }
-          .blog__overview p {
-            line-height: 1.6;
-          }
-
-          .blog__detail-link {
-            color: #000;
-          }
-          .info {
-            padding: 10px 0;
-          }
-          .title {
-            padding: 10px 0;
-          }
-        `}</style>
+        </Stack>
       </Layout>
     )
   }

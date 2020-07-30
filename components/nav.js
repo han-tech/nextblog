@@ -17,7 +17,7 @@ const Nav = ({settings}) => {
         align="center"
         justify="space-between"
         wrap="wrap"
-        padding="1.5rem"
+        padding="1rem"
         bg="teal.500"
         color="white"
         {...settings}
