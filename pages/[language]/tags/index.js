@@ -1,8 +1,7 @@
 import React from 'react'
 import Layout from '../../../components/layout'
 import StoryblokService from '../../../utils/storyblok-service'
-import Link from 'next/link'
-import { Box, Stack, Heading } from '@chakra-ui/core'
+import { Box, Stack, Heading, Link } from '@chakra-ui/core'
 
 export default class extends React.Component {  
   static async getInitialProps({ query }) {
@@ -40,13 +39,9 @@ export default class extends React.Component {
               return (
                 <Box m={2}>
                   <Link href={`/${language}/tags/` + name}>
-                    <a className="blog__detail-link">
-                      <Box>
-                        <Heading>
-                          {name} ({taggings_count})
-                        </Heading>
-                      </Box>
-                    </a>
+                      <Heading>
+                        {name} ({taggings_count})
+                      </Heading>
                   </Link>
                 </Box>
                 )

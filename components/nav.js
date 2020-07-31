@@ -1,6 +1,5 @@
-import Link from 'next/link'
 import React from "react"
-import { Box, Flex, Text, Image } from "@chakra-ui/core"
+import { Box, Flex, Text, Image, Link } from "@chakra-ui/core"
 
 const MenuItems = ({ children }) => (
   <Text mt={{ base: 4, md: 0 }} mr={6} display="block">
@@ -47,7 +46,7 @@ const Nav = ({settings}) => {
           {settings && settings.content && settings.content.main_navi.map((navitem, index) =>
             <MenuItems key={index}>
               <Link href={navitem.link.cached_url}>
-                <a>{navitem.name}</a>
+                {navitem.name}
               </Link>            
             </MenuItems>
           )}
@@ -58,7 +57,7 @@ const Nav = ({settings}) => {
         >
           <MenuItems>
             <Link href="/en/blog">
-              <a>English</a>
+              English
             </Link>
           </MenuItems>
         </Box>    
@@ -68,7 +67,7 @@ const Nav = ({settings}) => {
         >
           <MenuItems>
             <Link href="/de/blog">
-              <a>German</a>
+              German
             </Link>
           </MenuItems>
         </Box>        

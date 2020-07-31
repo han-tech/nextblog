@@ -1,8 +1,7 @@
 import React from 'react'
-import Link from 'next/link'
 import Layout from '../../../components/layout'
 import StoryblokService from '../../../utils/storyblok-service'
-import { Heading, Stack,Box,Text } from '@chakra-ui/core'
+import { Heading, Stack,Box,Text, Link } from '@chakra-ui/core'
 
 export default class extends React.Component {
 
@@ -45,16 +44,14 @@ export default class extends React.Component {
                       return (
                       <Box key={index} m={3}>
                           <Link href={'/' + post.full_slug}>
-                            <a>
-                              <Box>
-                                  <Heading>
-                                    {post.name}
-                                  </Heading>
-                                  <Text>
-                                    {post.intro}
-                                  </Text>
-                              </Box>                                  
-                            </a>
+                            <Box>
+                                <Heading>
+                                  {post.name}
+                                </Heading>
+                                <Text>
+                                  {post.intro}
+                                </Text>
+                            </Box>                                  
                           </Link>
                       </Box>
                       )

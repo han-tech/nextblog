@@ -1,10 +1,9 @@
 import React from 'react'
-import Link from 'next/link'
 import Layout from '../../../components/layout'
 import StoryblokService from '../../../utils/storyblok-service'
 import SbEditable from 'storyblok-react'
 import marked from 'marked'
-import { Box, Heading, Stack } from "@chakra-ui/core"
+import { Box, Heading, Stack, Link, Text } from "@chakra-ui/core"
 import PostCard from '../../../components/PostCard'
 
 export default class extends React.Component {
@@ -51,24 +50,22 @@ export default class extends React.Component {
       <Layout settings={settingsContent}>
         <SbEditable content={pageContent}>
           <Stack>
-            <PostCard post={{published_at:published_at, image:pageContent.image, name:pageContent.name, intro:pageContent.intro, author:pageContent.author, category:pageContent.category, tag_list:tag_list, full_slug:full_slug}} index={0} language={language} />
-            <Box dangerouslySetInnerHTML={this.body()}></Box>
-            <Box className="related_posts">
-              <Heading>Related Posts</Heading>
-              {pageContent.related_posts && pageContent.related_posts.map((post) => {
-                return (
-                  <Link href={'/' + post.full_slug}>
-                    <a className="blog__detail-link">
-                      <div className="title">
-                        <h3>
+            <PostCard post={{published_at:published_at, image:pageContent.image, name:pageContent.name, intro:pageContent.intro, author:pageContent.author, category:pageContent.category, tag_list:tag_list, full_slug:full_slug}} index={0} language={language}>
+              <Box dangerouslySetInnerHTML={this.body()}></Box>
+              <Box className="related_posts">
+                <Heading mb={4}>Related Posts</Heading>
+                {pageContent.related_posts && pageContent.related_posts.map((post) => {
+                  return (
+                    <Link href={'/' + post.full_slug}>
+                        <Heading>
                           {post.name}
-                        </h3>
-                      </div>
-                    </a>
-                  </Link>                    
-                )}
-              )} 
-            </Box>
+                        </Heading>
+                        <Text>{post.content.intro}</Text>
+                    </Link>                    
+                  )}
+                )} 
+              </Box>
+            </PostCard>
           </Stack>
         </SbEditable>
       </Layout>

@@ -2,14 +2,14 @@ import React from 'react'
 import Head from './head'
 import Nav from './nav'
 import StoryblokService from '../utils/storyblok-service'
-import { Stack } from "@chakra-ui/core"
+import { Box } from "@chakra-ui/core"
 export default ({ children, settings = {} }) => (
   <>
     <Head />
     <Nav settings={settings} />
-    <Stack m={5}>
+    <Box alignItems="center" margin="auto" width={{ sm: 'full', md: '80em' }} minH="100vh">
       {children}
-    </Stack>    
+    </Box>    
     {StoryblokService.bridge()}
   </>
 )
