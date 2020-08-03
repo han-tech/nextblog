@@ -1,6 +1,6 @@
 import React from 'react';
 import SbEditable from 'storyblok-react'
-import { Stack, Box, Text, Input, Button } from "@chakra-ui/core"
+import { Flex, Box, Text, Input, Button, Heading, FormControl, FormLabel, FormErrorMessage } from "@chakra-ui/core"
 export default class Form extends React.Component {
     constructor(props) {
       super(props);
@@ -10,27 +10,40 @@ export default class Form extends React.Component {
         blok:props.blok
       };
     }
-  
+    isRequiredValid(value, name, isRequired) {
+      let error;
+      if (isRequired && !value) {
+        error = `${name} is required`;
+      }
+      return error || true;
+    }
     render() {
       const { status, blok } = this.state;
       return (
         <SbEditable content={blok}>
-            <form
-                onSubmit={this.submitForm}
-                action={blok.handler}
-                method="POST"
-            >
-                <Stack>
-                    {blok.fields.map((field, index) =>
-                        <Box key={index} w="400px">
-                            <Text>{field.name}:</Text>
-                            <Input type={field.type} name={field.name} />
-                        </Box>
-                    )}
-                </Stack>
-                {status === "SUCCESS" ? <Text>{blok.successMessage}</Text> : <Button>Submit</Button>}
-                {status === "ERROR" && <Text>{blok.errorMessage}</Text>}
-            </form>
+          <Flex width="full" align="center" justifyContent="center">
+            <Box p={2}>
+              <Box textAlign="center">
+                <Heading>{blok.title}</Heading>
+              </Box>
+              <Box my={4} textAlign="left">
+                <form
+                    onSubmit={this.submitForm}
+                    action={blok.handler}
+                    method="POST"
+                >
+                  {blok.fields.map((field, index) =>
+                    <FormControl key={index} mt={6}>
+                      <FormLabel>{field.name}</FormLabel>
+                      <Input type={field.type} name={field.name} placeholder={field.placeholder}/>
+                    </FormControl>                      
+                  )}
+                    {status === "SUCCESS" ? <Text>{blok.successMessage}</Text> : <Button type="submit" mt={4}>{blok.primaryAction}</Button>}
+                    {status === "ERROR" && <Text>{blok.errorMessage}</Text>}
+                </form>
+              </Box>
+            </Box>
+          </Flex>
         </SbEditable>
       );
     }

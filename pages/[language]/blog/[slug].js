@@ -5,6 +5,7 @@ import SbEditable from 'storyblok-react'
 import marked from 'marked'
 import { Box, Heading, Stack, Link, Text } from "@chakra-ui/core"
 import PostCard from '../../../components/PostCard'
+import MiniCard from '../../../components/MiniCard'
 
 export default class extends React.Component {
   constructor(props) {
@@ -53,17 +54,14 @@ export default class extends React.Component {
             <PostCard post={{published_at:published_at, image:pageContent.image, name:pageContent.name, intro:pageContent.intro, author:pageContent.author, category:pageContent.category, tag_list:tag_list, full_slug:full_slug}} index={0} language={language}>
               <Box dangerouslySetInnerHTML={this.body()}></Box>
               <Box className="related_posts">
-                <Heading mb={4}>Related Posts</Heading>
-                {pageContent.related_posts && pageContent.related_posts.map((post) => {
-                  return (
-                    <Link href={'/' + post.full_slug}>
-                        <Heading>
-                          {post.name}
-                        </Heading>
-                        <Text>{post.content.intro}</Text>
-                    </Link>                    
-                  )}
-                )} 
+                <Heading mt={4} mb={4}>Related Posts</Heading>
+                <Stack isInline={true}>
+                  {pageContent.related_posts && pageContent.related_posts.map((post, index) => {
+                    return (
+                      <MiniCard post={post} index={index} />              
+                    )}
+                  )} 
+                </Stack>
               </Box>
             </PostCard>
           </Stack>
