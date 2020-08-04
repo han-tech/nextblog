@@ -6,7 +6,6 @@ import {
   Box,
   Text,
   Checkbox,
-  Radio,
   SimpleGrid,
   CheckboxGroup,
   RadioGroup,
@@ -64,7 +63,7 @@ export default function Form(props) {
                   <FormLabel htmlFor={field.name}>{field.title}</FormLabel>
                   <RadioGroup defaultValue={field.default} >
                     {field.items.map((item)=>{
-                      return(<Radio value={item.value}>{item.title}</Radio>)
+                      return(<Component blok={item} key={item._uid}/>)
                     })}
                   </RadioGroup>
                 </SimpleGrid>}
@@ -73,7 +72,7 @@ export default function Form(props) {
                   <FormLabel htmlFor={field.name}>{field.title}</FormLabel>
                   <CheckboxGroup defaultValue={field.default} >
                     {field.items.map((item)=>{
-                      return(<Checkbox value={item.value}>{item.title}</Checkbox>)
+                      return(<Component blok={item} key={item._uid}/>)
                     })}
                   </CheckboxGroup>
                 </SimpleGrid>}

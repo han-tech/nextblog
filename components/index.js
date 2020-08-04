@@ -21,7 +21,6 @@ const Components = {
 
 const Component = ({blok}) => {
   if (typeof Components[blok.component] !== 'undefined') {
-    console.log(blok)
     const Component = Components[blok.component]
     return <Component blok={blok}  key={blok._uid}/>
   }

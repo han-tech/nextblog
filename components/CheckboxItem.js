@@ -5,7 +5,7 @@ import { Checkbox } from "@chakra-ui/core"
 const CheckboxItem = ({blok}) => {
     return (
     <SbEditable content={blok}>      
-      <input type="checkbox" checked={blok.value} name={blok.name}/>
+      <Checkbox type="checkbox"  isChecked={blok.selected==="true"} value={blok.value} name={blok.name}>{blok.title}</Checkbox>
     </SbEditable>
   )
 }
