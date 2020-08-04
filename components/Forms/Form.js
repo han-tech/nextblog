@@ -1,10 +1,11 @@
-import Component from './index';
+import Component from '../index';
 import { useForm } from "react-hook-form";
 import React, { useState } from "react";
 import {
   Flex,
   Box,
   Text,
+  Select,
   Checkbox,
   SimpleGrid,
   CheckboxGroup,
@@ -58,6 +59,15 @@ export default function Form(props) {
                   <Textarea size="md" name={field.name} variantColor="green" defaultValue={field.default} placeholder={field.placeHolder} ref={register({ required: field.isRequired })}>
                   </Textarea>
                 </>}
+              {field.type==="select" && 
+                <SimpleGrid columns={3}  spacing={10}>
+                  <FormLabel htmlFor={field.name}>{field.title}</FormLabel>
+                  <Select defaultValue={field.default} >
+                    {field.items.map((item)=>{
+                      return(<Component blok={item} key={item._uid}/>)
+                    })}
+                  </Select>
+                </SimpleGrid>}
               {field.type==="radiogroup" && 
                 <SimpleGrid columns={3}  spacing={10}>
                   <FormLabel htmlFor={field.name}>{field.title}</FormLabel>
@@ -76,7 +86,11 @@ export default function Form(props) {
                     })}
                   </CheckboxGroup>
                 </SimpleGrid>}
-              {field.type!=="checkbox" && field.type!=="textarea" && field.type!=="radiogroup" && field.type!=="checkboxgroup" &&  
+              {field.type!=="checkbox" && 
+                field.type!=="textarea" && 
+                field.type!=="radiogroup" && 
+                field.type!=="checkboxgroup" &&  
+                field.type!=="select" &&  
                 <>
                   <FormLabel htmlFor={field.name}>{field.title}</FormLabel>
                   <Input type={field.type} name={field.name} placeholder={field.placeHolder} defaultValue={field.default} ref={register({ required: field.isRequired })}/>

@@ -3,10 +3,11 @@ import Feature from './Feature'
 import Grid from './Grid'
 import Placeholder from './Placeholder'
 import Slide from './Slide'
-import Field from './Field'
-import Form from './Form'
-import RadioItem from './RadioItem'
-import CheckboxItem from './CheckboxItem'
+import Field from './Forms/Field'
+import Form from './Forms/Form'
+import RadioItem from './Forms/RadioItem'
+import CheckboxItem from './Forms/CheckboxItem'
+import Option from './Forms/Option'
 
 const Components = {
   'teaser': Teaser,
@@ -16,7 +17,8 @@ const Components = {
   'field': Field,
   'form': Form,
   'radioItem':RadioItem,
-  'checkboxItem':CheckboxItem
+  'checkboxItem':CheckboxItem,
+  'option': Option
 }
 
 const Component = ({blok}) => {
